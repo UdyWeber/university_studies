@@ -1,4 +1,4 @@
-public class Principal {
+public class PrincipalExercisesOne {
     public static void main(String[] args) {
         Livro blankBook = new Livro();
         Livro strawberryFields = new Livro(

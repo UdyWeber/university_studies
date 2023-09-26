@@ -1,4 +1,4 @@
-public class Principal {
+public class PrincipalIntroduction {
     public static void main(String[] args) {
         // Exercise a
         Aluno x = new Aluno("Brandamente Brasil", "1585248", 5, 9);
