@@ -1,0 +1,62 @@
++---------------------------------+
+|            Cores                |
++---------------------------------+
+| - AMARELO: String               |
+| - ROXO: String                  |
+| - BRANCO: String                |
+| - VERMELHO: String              |
+| - VERDE: String                 |
++---------------------------------+
+| + Cores(representacao: String) |
+| + toString(): String           |
++---------------------------------+
+
++--------------------------------+
+|            Dado                |
++--------------------------------+
+| - cor: String                  |
++--------------------------------+
+| + Dado(color: String)          |
+| + jogaDado(): int              |
+| + getCor(): String             |
+| + setCor(cor: String): void    |
++--------------------------------+
+
++---------------------------------------------------------------+
+|                             Jogador                           |
++---------------------------------------------------------------+
+| - nome: String                                                |
+| - pontos: int                                                 |
+| - dadoVermelho: Dado                                          |
+| - dadoBranco: Dado                                            |
++---------------------------------------------------------------+
+| + Jogador(name: String, dadoVermelho: Dado, dadoBranco: Dado) |
+| + rodarDados(): void                                          |
+| + getNome(): String                                           |
+| + getDadoVemelho(): Dado                                      |
+| + getDadoBranco(): Dado                                       |
+| + getPontos(): int                                            |
+| + setNome(nome: String): void                                 |
+| + setPontos(pontos: int): void                                |
+| + setDadoVemelho(dadoVemelho: Dado): void                     |
+| + setDadoBranco(dadoBranco: Dado): void                       |
++---------------------------------------------------------------+
+
++--------------------------------------+
+|               Jogo                   |
++--------------------------------------+
+| - teclado: Teclado                   |
+| - jogador1: Jogador                  |
+| - jogador2: Jogador                  |
+| - resumoDaPartida: String            |
+| - rodada: int                        |
++--------------------------------------+
+| + Jogo()                             |
+| - imprimeRegras(): void              |
+| - criaJogador(): Jogador             |
+| - imprimeResultadoFinal(): void      |
+| - getNomeVencendor(): String         |
+| - jogaOuPassa(player: Jogador): void |
+| - imprimeResumoDaRodada(): void      |
+| + comecaJogo(): void                 |
++--------------------------------------+

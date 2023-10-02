@@ -1,6 +1,6 @@
 public class Principal {
     public static void main(String[] args) {
-        Game g = new Game();
+        Jogo g = new Jogo();
         g.comecaJogo();
     }
 }
