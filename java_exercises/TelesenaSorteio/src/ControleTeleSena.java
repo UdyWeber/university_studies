@@ -77,20 +77,35 @@ public class ControleTeleSena {
             // Inicializa um Array de Tele Senas com a quantidade esperada
             teleSenaArray = new TeleSena[qtdTeleSena];
 
+            try {
+                System.out.printf("Fazend a compra das %d Tele Senas de %s%n", qtdTeleSena, p.getNome());
+                Thread.sleep(500);
+            } catch(Exception ignored){}
+
             for (int i = 0; i < qtdTeleSena; i++) {
                 // Antes de comprar temos que verificar se ainda há Tele Senas disponiveis para venda
-                if ((TOTAL_TELE_SENAS - this.teleSenasVendidas) < 0) {
-                    return;
+                if ((TOTAL_TELE_SENAS - this.teleSenasVendidas) <= 0) {
+                    System.out.println("\u001B[31m" + "[ERRO]: Não foi possivel realizar a compra. Infelizmente as Tele Senas acabaram..." + "\u001B[0m\n");
+                    p.setTeleSenas(teleSenaArray);
+                    break;
                 }
 
                 // Gera a Tele Sena e incrementa a quantidade de vendidas
                 teleSenaArray[i] = generateTeleSena();
+
+                System.out.println("\u001B[32m" + "[SUCESSO]: Tele Sena comprada com sucesso, indo para a proxima..." + "\u001B[0m\n");
                 this.teleSenasVendidas++;
             }
 
             // Seta o Array de Tele Senas da pessoa
             p.setTeleSenas(teleSenaArray);
         }
+
+        System.out.println("FINALIZADAS AS COMPRAS O SORTEIO DOS PRIMEIROS 25 NÚMEROS INICIARA EM 2s!\n");
+
+        try {
+            Thread.sleep(2000);
+        } catch(Exception ignored){}
     }
 
     /** Função auxiliar para formatar os números que foram sorteados numa string que fique bonita no display final **/
@@ -138,7 +153,7 @@ public class ControleTeleSena {
             if (this.vencedores[i] == null) {
                 totalVencedores = i;
                 break;
-            };
+            }
         }
 
         String[] nomesVencedores = new String[totalVencedores];
@@ -194,7 +209,7 @@ public class ControleTeleSena {
             System.out.printf("Número %d má oi!%n%n", numero);
 
             // Propaganda do SBT para fazer dar risadinhas em tempo de execução!
-            if (pos % 5 == 0) {
+            if (pos % 10 == 0) {
                 System.out.println(
                     "\u001B[32m"+ """
                                                                                                                                                          \s
@@ -242,7 +257,11 @@ public class ControleTeleSena {
 
             // Mensagem caso tenhamos que continuar com a procura por um vencedor após 25 números terem sido sorteados
             if (i == 25) {
-                System.out.println("Parece que não houveram vencedores :C\nVamos continuar sorteando má oi!!!!!\n");
+                try {
+                    System.out.println("Parece que não houveram vencedores :C\n\nVAMOS CONTINUAR SORTEANDO, VEM PRA CA, MÁ OI!!!!!\n");
+                    Thread.sleep(1000);
+
+                } catch (Exception ignored) {}
             }
 
             // Anuncia novo número no terminal de Output

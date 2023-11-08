@@ -14,6 +14,10 @@ public class Pessoa {
         for (int t = 0; t < this.teleSenas.length; t++ ) {
             TeleSena teleSena = this.teleSenas[t];
 
+            if (teleSena == null) {
+                continue;
+            }
+
             // Faz a apuração dos pontos antes de checar se é o ganhador
             teleSena.atualizaAcertos(numeroSortedo);
 
