@@ -5,13 +5,9 @@ public class ControleTeleSena {
     private Pessoa[] vencedores;
     private int[] numerosSorteados;
     private int teleSenasVendidas;
-    private final int TOTAL_TELE_SENAS = 300;
 
     public ControleTeleSena(Pessoa[] pessoas) {
         this.pessoas = pessoas;
-
-        // Igualando os valores, pois não sabemos quantos possiveis vencedores teremos.
-        this.vencedores = new Pessoa[pessoas.length];
 
         // Comprando Tele Senas para todas as pessoas
         compraTeleSenas();
@@ -68,6 +64,7 @@ public class ControleTeleSena {
     /** Função auxiliar que compra as Tele Senas para cada pessoa participando do sorteio **/
     private void compraTeleSenas() {
         TeleSena[] teleSenaArray;
+        final int TOTAL_TELE_SENAS = 300;
 
         // Para cada pessoa do sorteio, temos que sortear quantas Tele Senas a pessoa vai comprar
         // e adicionar uma nova Tele Sena inicializada no array de Tele Senas da pessoa
@@ -143,26 +140,32 @@ public class ControleTeleSena {
         return "\u001B[32m" + numerosSorteadosFormatados + "\u001B[0m";
     }
 
-    /**
-     * Função auxiliar para formatar os nomes dos vencedores em uma unica lista e deixar mais facil para saber o número
-     * real de vencedores no resultado final.
-     * **/
+    /** Função auxiliar para pegar a lista dos nomes dos jogadores que ganharam na Tele Sena **/
     private String[] getNomesVencedores() {
-        int totalVencedores = 0;
-        for (int i = 0; i < this.vencedores.length; i++) {
-            if (this.vencedores[i] == null) {
-                totalVencedores = i;
-                break;
-            }
-        }
-
-        String[] nomesVencedores = new String[totalVencedores];
+        String[] nomesVencedores = new String[this.vencedores.length];
 
         for (int i = 0; i < nomesVencedores.length; i++) {
             nomesVencedores[i] = this.vencedores[i].getNome();
         }
 
         return nomesVencedores;
+    }
+
+    /** Função auxiliar para formatar os vencedores no escopo global e deixar o array com o tamanho de acordo **/
+    private void formataVencedores(Pessoa[] tempVencedores) {
+        int totalVencedores = 0;
+        for (int posPessoa = 0; posPessoa < tempVencedores.length; posPessoa++) {
+            if (tempVencedores[posPessoa] == null) {
+                totalVencedores = posPessoa;
+                break;
+            }
+        }
+
+        this.vencedores = new Pessoa[totalVencedores];
+
+        for (int v = 0; v < this.vencedores.length; v++) {
+            this.vencedores[v] = tempVencedores[v];
+        }
     }
 
     /**
@@ -172,6 +175,8 @@ public class ControleTeleSena {
     private void printResult() {
         String[] nomesVencedores = getNomesVencedores();
         double totalValue = getTotalValue();
+        double prizePerPerson = getPrizePerPerson();
+
 
         System.out.printf(
             "\u001B[34m"+ """
@@ -194,7 +199,7 @@ public class ControleTeleSena {
             formataNumerosSorteados(),
             teleSenasVendidas,
             Arrays.toString(nomesVencedores).replaceAll("[\\[\\]]", ""),
-            (totalValue * 0.80) / nomesVencedores.length,
+            prizePerPerson,
             totalValue,
             totalValue * 0.20
 
@@ -204,7 +209,7 @@ public class ControleTeleSena {
     private void anunciaNumero(int numero, int pos) {
         try {
             // Anuncia a posição e dorme 1 seg para fazer um suspense...
-            System.out.printf("O número %dº sorteado é...%n", pos);
+            System.out.printf("O %dº número sorteado é...%n", pos);
             Thread.sleep(1000);
             System.out.printf("Número %d má oi!%n%n", numero);
 
@@ -247,16 +252,17 @@ public class ControleTeleSena {
         // Previamente já sorteia todos os números para não haverem inconsistencias nem duplicatas nos números duplicados
         // Melhora a performace, pois não temos que ficar verificando enquanto ocorrem os outros loops de checkagem
         int[] totalNums = new int[60];
+        Pessoa[] tempVencedores = new Pessoa[this.pessoas.length];
         sorteiaNums(totalNums);
 
         int numeroVencedores = 0;
 
         // Loop que faz o sorteio dos números pré definidos anteriormente
-        for (int i = 0; i < totalNums.length; i++) {
-            int numeroSortedo = totalNums[i];
+        for (int posNumeroSorteado = 0; posNumeroSorteado < totalNums.length; posNumeroSorteado++) {
+            int numeroSortedo = totalNums[posNumeroSorteado];
 
             // Mensagem caso tenhamos que continuar com a procura por um vencedor após 25 números terem sido sorteados
-            if (i == 25) {
+            if (posNumeroSorteado == 25) {
                 try {
                     System.out.println("Parece que não houveram vencedores :C\n\nVAMOS CONTINUAR SORTEANDO, VEM PRA CA, MÁ OI!!!!!\n");
                     Thread.sleep(1000);
@@ -265,38 +271,58 @@ public class ControleTeleSena {
             }
 
             // Anuncia novo número no terminal de Output
-            anunciaNumero(numeroSortedo, i + 1);
+            anunciaNumero(numeroSortedo, posNumeroSorteado + 1);
 
             // Loop que apura os pontos de cada pessoa no sorteio e define se ela ganhou ou não
             // baseado nos pontos apurados
-            for (int p = 0; p < pessoas.length; p++) {
-                Pessoa pessoa = pessoas[p];
+            for (int posPessoa = 0; posPessoa < pessoas.length; posPessoa++) {
+                Pessoa pessoa = pessoas[posPessoa];
 
                 if (pessoa.isVencedor(numeroSortedo)) {
                     // Se for um vencedor adicione na lista de vencedores e incremente o número de vencedores
-                    this.vencedores[numeroVencedores] = pessoa;
+                    tempVencedores[numeroVencedores] = pessoa;
                     numeroVencedores++;
                 }
             }
 
             // Caso os 25 números tenham sido anunciados e existe vencedores, encerre o sorteio e defina os ganhadores
-            if (i >= 25 && this.vencedores[0] != null) {
+            if (posNumeroSorteado >= 25 && tempVencedores[0] != null) {
                 // Ajusta os números sorteados para serem apenas os que foram anunciados
-                this.numerosSorteados = new int[i + 1];
+                this.numerosSorteados = new int[posNumeroSorteado + 1];
 
                 // Popula apenas os números anunciados
                 for (int j = 0; j < this.numerosSorteados.length; j++) {
                     this.numerosSorteados[j] = totalNums[j];
                 }
 
+                formataVencedores(tempVencedores);
                 printResult();
+                distribuiPremio();
+
                 return;
             }
+        }
+    }
+
+    /** Função que distribui o prêmio entre os vencedores da Tele Sena e confirma o recebimento no terminal **/
+    private void distribuiPremio() {
+        double prize = getPrizePerPerson();
+
+        for(int posVencedor = 0; posVencedor < this.vencedores.length; posVencedor++) {
+            Pessoa vencedor = this.vencedores[posVencedor];
+
+            vencedor.setValorPremiacao(prize);
+            System.out.printf("\u001B[32m" + "%n%s recebeu o valor de R$%.2f!!%n", vencedor.getNome(), prize);
         }
     }
 
     /** Retorna o total arrecadado com a venda de todas as Tele Senas **/
     private double getTotalValue() {
         return this.teleSenasVendidas * TeleSena.valor;
+    }
+
+    /** Retorna o total recebido por jogador que teve a Tele Sena premiada **/
+    private double getPrizePerPerson() {
+        return (getTotalValue() * 0.80) / this.vencedores.length;
     }
 }
