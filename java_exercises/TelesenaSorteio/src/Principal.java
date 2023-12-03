@@ -1,5 +1,6 @@
-public class Main {
+public class Principal {
     public static void main(String[] args) {
+        // Pessoas pré-criadas para participar do sorteio
         Pessoa[] personNames = {
             new Pessoa("Emily"),
             new Pessoa("Alexander"),
@@ -11,7 +12,7 @@ public class Main {
             new Pessoa("Noah"),
             new Pessoa("Taylor"),
             new Pessoa("Aiden"),
-            new Pessoa("Isabella"),
+            new Pessoa("Amanda"),
             new Pessoa("Lucas"),
             new Pessoa("Thomas"),
             new Pessoa("Mason"),
@@ -23,6 +24,7 @@ public class Main {
             new Pessoa("William")
         };
 
+        // Inicia o sorteio com as pessoas acima!!
         ControleTeleSena c = new ControleTeleSena(personNames);
         c.sorteio();
     }

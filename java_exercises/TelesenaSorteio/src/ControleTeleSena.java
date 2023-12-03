@@ -264,8 +264,8 @@ public class ControleTeleSena {
             // Mensagem caso tenhamos que continuar com a procura por um vencedor após 25 números terem sido sorteados
             if (posNumeroSorteado == 25) {
                 try {
-                    System.out.println("Parece que não houveram vencedores :C\n\nVAMOS CONTINUAR SORTEANDO, VEM PRA CA, MÁ OI!!!!!\n");
-                    Thread.sleep(1000);
+                    System.out.println("\033[0;31mParece que não houveram vencedores :C\n\nVAMOS CONTINUAR SORTEANDO, VEM PRA CA, MÁ OI!!!!!\n\033[0m");
+                    Thread.sleep(2000);
 
                 } catch (Exception ignored) {}
             }
